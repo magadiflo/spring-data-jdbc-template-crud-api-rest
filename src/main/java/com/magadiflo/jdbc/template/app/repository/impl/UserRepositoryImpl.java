@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository {
@@ -34,9 +35,9 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
-    public User findById(Long id) {
+    public Optional<User> findById(Long id) {
         String sqlQuery = "SELECT id, first_name, last_name, email FROM users WHERE id = ?";
-        return this.jdbcTemplate.queryForObject(sqlQuery, this.rowMapper, id);
+        return Optional.ofNullable(this.jdbcTemplate.queryForObject(sqlQuery, this.rowMapper, id));
     }
 
     @Override
