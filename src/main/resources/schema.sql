@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS users;
+
+CREATE TABLE users(
+    id BIGINT(20) AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    CONSTRAINT uk_email UNIQUE(email)
+);
