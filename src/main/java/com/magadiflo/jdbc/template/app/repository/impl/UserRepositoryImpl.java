@@ -2,6 +2,9 @@ package com.magadiflo.jdbc.template.app.repository.impl;
 
 import com.magadiflo.jdbc.template.app.model.User;
 import com.magadiflo.jdbc.template.app.repository.IUserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,11 +12,13 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository {
+    private static final Logger LOG = LoggerFactory.getLogger(UserRepositoryImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
     // Expresión Lambda, implementando la interfaz funcional RowMapper
@@ -37,7 +42,13 @@ public class UserRepositoryImpl implements IUserRepository {
     @Override
     public Optional<User> findById(Long id) {
         String sqlQuery = "SELECT id, first_name, last_name, email FROM users WHERE id = ?";
-        return Optional.ofNullable(this.jdbcTemplate.queryForObject(sqlQuery, this.rowMapper, id));
+        User user = null;
+        try {
+            user = this.jdbcTemplate.queryForObject(sqlQuery, this.rowMapper, id);
+        } catch (EmptyResultDataAccessException er) {
+            LOG.error("User not found with id: {}", id);
+        }
+        return Optional.ofNullable(user);
     }
 
     @Override
@@ -57,7 +68,7 @@ public class UserRepositoryImpl implements IUserRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         this.jdbcTemplate.update(connection -> {
-            PreparedStatement ps = connection.prepareStatement(sqlQuery);
+            PreparedStatement ps = connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
             ps.setString(1, user.firstName());
             ps.setString(2, user.lastName());
