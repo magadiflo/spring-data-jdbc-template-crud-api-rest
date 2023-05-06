@@ -1,6 +1,7 @@
 package com.magadiflo.jdbc.template.app.model.entity;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -8,8 +9,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * OneToMany
- * Customer 1 -- * Invoice
+ * Esta clase es un Aggregate Root o Entidad raíz
+ * **********************************************
+ * Cada agregado que se define tiene una entidad raíz de
+ * la que colgarán el resto de entidades.
+ * Una entidad raíz no tiene otra entidad de la que dependa,
+ * sino que es la raíz de las demás entidades.
  */
 
 @Table(name = "customers")
@@ -18,12 +23,24 @@ public class Customer {
     private Long id;
     private String name;
     private String phone;
+
     /**
+     * OneToMany [Customer 1 -- * Invoice]
+     * ***********************************
      * keyColumn="id", nombre de la clave primaria de la tabla Invoice.
      * idColumn="customer_id", nombre de la clave foránea que hace referencia a la tabla Customer en la tabla Invoice.
      */
     @MappedCollection(keyColumn = "id", idColumn = "customer_id")
     private Set<Invoice> invoices = new HashSet<>();
+
+    /**
+     * OneToOne [Customer 1 -- 1 Address]
+     * **********************************
+     * customer_id, corresponde al nombre de la columna (fokeing key)
+     * en la tabla addresses
+     */
+    @Column(value = "customer_id")
+    private Address address;
 
     public Long getId() {
         return id;
@@ -57,6 +74,14 @@ public class Customer {
         this.invoices = invoices;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Customer{");
@@ -64,6 +89,7 @@ public class Customer {
         sb.append(", name='").append(name).append('\'');
         sb.append(", phone='").append(phone).append('\'');
         sb.append(", invoices=").append(invoices);
+        sb.append(", address=").append(address);
         sb.append('}');
         return sb.toString();
     }

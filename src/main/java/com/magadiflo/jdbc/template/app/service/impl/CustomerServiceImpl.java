@@ -43,6 +43,7 @@ public class CustomerServiceImpl implements ICustomerService {
                     customerDB.setName(customer.getName());
                     customerDB.setPhone(customer.getPhone());
                     customerDB.setInvoices(customer.getInvoices());
+                    customerDB.setAddress(customer.getAddress());
                     return Optional.of(this.customerRepository.save(customerDB));
                 })
                 .orElseGet(Optional::empty);

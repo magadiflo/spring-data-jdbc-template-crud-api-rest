@@ -11,3 +11,6 @@ INSERT INTO invoices(customer_id, number, total, create_at) VALUES(1, 'F01-002',
 INSERT INTO invoices(customer_id, number, total, create_at) VALUES(1, 'F01-003', 750.0, '2023-05-07');
 INSERT INTO invoices(customer_id, number, total, create_at) VALUES(2, 'F01-003', 120.0, '2023-05-07');
 INSERT INTO invoices(customer_id, number, total, create_at) VALUES(2, 'F01-003', 190.0, '2023-05-07');
+
+INSERT INTO addresses(customer_id, street, country) VALUES(1, 'Las Palmeras', 'Perú');
+INSERT INTO addresses(customer_id, street, country) VALUES(2, 'Las Ponceanas', 'Perú');
