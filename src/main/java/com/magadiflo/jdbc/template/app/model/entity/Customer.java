@@ -27,10 +27,9 @@ public class Customer {
     /**
      * OneToMany [Customer 1 -- * Invoice]
      * ***********************************
-     * keyColumn="id", nombre de la clave primaria de la tabla Invoice.
-     * idColumn="customer_id", nombre de la clave foránea que hace referencia a la tabla Customer en la tabla Invoice.
+     * idColumn="customer_id", nombre de la clave foránea que está en tabla Invoice.
      */
-    @MappedCollection(keyColumn = "id", idColumn = "customer_id")
+    @MappedCollection(idColumn = "customer_id")
     private Set<Invoice> invoices = new HashSet<>();
 
     /**
